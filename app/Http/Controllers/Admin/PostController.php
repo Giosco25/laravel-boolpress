@@ -30,6 +30,7 @@ class PostController extends Controller
         return view('admin.posts.create');
     }
 
+
     /**
      * Store a newly created resource in storage.
      *
@@ -68,9 +69,9 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
-    {
-        //
+    public function edit(Post $post)
+    {    
+        return view('admin.posts.edit', compact('post'));
     }
 
     /**
@@ -82,7 +83,22 @@ class PostController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        {
+            $request->validate([
+                'title' => 'required|max:255|unique:posts,title,'.$id,
+                'content' => 'required'
+            ]);
+
+            $dati = $request->all();
+            $slug = Str::of($dati['title'])->slug('-');
+            $dati['slug'] = $slug;
+
+            $post = Post::find($id);
+            $post->update($dati);
+
+            return redirect()->route('admin.posts.index');
+        }
+
     }
 
     /**
@@ -91,8 +107,9 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Post $post)
     {
-        //
+        $post->delete();
+        return redirect()->route('admin.posts.index');
     }
 }

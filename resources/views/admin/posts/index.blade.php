@@ -35,12 +35,14 @@
                       href="{{ route('admin.posts.show', ['post'=>$post->id]) }}">
                           Dettagli
                       </a>
-                      <a class="btn btn-success btn-sm" href="">
+                      <a class="btn btn-success btn-sm" href="{{ route('admin.posts.edit', ['post' => $post->id]) }}">
                           Modifica
                       </a>
-                      <a class="btn btn-info btn-sm" href="">
-                          Elimina
-                      </a>
+                      <form class="d-inline" action="{{ route('admin.posts.destroy', ['post' => $post->id]) }}" method="post">
+                          @csrf
+                          @method('DELETE')
+                          <input type="submit" class="btn btn-small btn-info btn-sm" value="Elimina">
+                      </form>
                   </td>
               </tr>
           @endforeach
