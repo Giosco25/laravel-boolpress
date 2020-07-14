@@ -11,6 +11,7 @@
                     <p class="card-text">Slug: {{ $post->slug }}</p>
                     <p class="card-text">Creato il: {{ $post->created_at }}</p>
                     <p class="card-text">Aggiornato il: {{ $post->updated_at }}</p>
+                    <p class="card-text">Categoria: {{ $post->category->name ?? '' }}</p>
                   </div>
                 </div>
             </div>
