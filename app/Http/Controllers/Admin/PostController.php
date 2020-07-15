@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Post;
 use App\Category;
+use App\Tag;
 use Illuminate\Support\Str;
 
 class PostController extends Controller
@@ -18,7 +19,14 @@ class PostController extends Controller
     public function index()
     {
         $posts = Post::all();
-        return view('admin.posts.index', compact('posts'));
+        $tags  = Tag::all();
+        // si usa data per mettere più cose e poi inserirlo nell return
+        // N.B si può mettere tags direttamente su compact('posts','tags')
+        $data = [
+            'posts'=>$posts,
+            'tags'=>$tags
+        ];
+        return view('admin.posts.index', $data);
     }
 
     /**
@@ -29,7 +37,8 @@ class PostController extends Controller
     public function create()
     {
         $categories = Category::all();
-        return view('admin.posts.create', compact('categories'));
+        $tags  = Tag::all();
+        return view('admin.posts.create', compact('categories', 'tags'));
     }
 
 
@@ -41,16 +50,26 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
+        // richiesta di validità
         $request->validate([
-            'title' => 'required|max:200|unique:posts,title',
-            'content' => 'required'
+            "title" => 'required|max:200|unique:posts,title',
+            "content" => 'required'
         ]);
+        // richiediamo tutti i dati
         $dati = $request->all();
+
         $slug = Str::of($dati['title'])->slug('-')->__tostring();
         $dati['slug'] = $slug;
+        // creiamo un nuovo Post
         $nuovo_post = new Post();
+        // fill tiene in memoria i dati e va sempre con save
         $nuovo_post->fill($dati);
         $nuovo_post->save();
+        // se i dati che abbiamo dei tags non è vuoto esegue altrimenti torna alla pagina iniziale
+        if (!empty($dati['tags'])) {
+            // sync permette di passare un array e fa sia attach che detach contemporaneamente cioè attacch salvare dei record, detach eliminare i record
+            $nuovo_post->tags()->sync($dati['tags']);
+        }
         return redirect()->route('admin.posts.index');
     }
 
@@ -74,11 +93,13 @@ class PostController extends Controller
     public function edit(Post $post)
     {
         $categories = Category::all();
-        $dati = [
+        $tags  = Tag::all();
+        $data = [
             "post" =>$post,
-            "categories"=> $categories
+            "categories"=> $categories,
+            "tags"=> $tags
         ];
-        return view('admin.posts.edit', $dati);
+        return view('admin.posts.edit', $data);
     }
 
     /**
@@ -99,10 +120,12 @@ class PostController extends Controller
             $dati = $request->all();
             $slug = Str::of($dati['title'])->slug('-');
             $dati['slug'] = $slug;
-
+            // Agisce sulla chiave primaria e prende un post con tutte le sue caratteristiche
             $post = Post::find($id);
             $post->update($dati);
-
+            if (!empty($dati['tags'])) {
+                $post->tags()->sync($dati['tags']);
+            }
             return redirect()->route('admin.posts.index');
         }
 

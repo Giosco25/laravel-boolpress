@@ -22,32 +22,38 @@
           <th scope="col">Title</th>
           <th scope="col">Slug</th>
           <th scope="col">Category</th>
+          <th scope="col">Tags</th>
           <th scope="col">Action</th>
         </tr>
       </thead>
       <tbody>
-          @foreach ($posts as $post)
-              <tr>
-                  <td>{{ $post->id }}</td>
-                  <td>{{ $post->title }}</td>
-                  <td>{{ $post->slug }}</td>
-                  <td>{{ $post->category->name ?? '' }}</td>
-                  <td>
-                      <a class="btn btn-secondary btn-sm"
-                      href="{{ route('admin.posts.show', ['post'=>$post->id]) }}">
-                          Dettagli
-                      </a>
-                      <a class="btn btn-success btn-sm" href="{{ route('admin.posts.edit', ['post' => $post->id]) }}">
-                          Modifica
-                      </a>
-                      <form class="d-inline" action="{{ route('admin.posts.destroy', ['post' => $post->id]) }}" method="post">
-                          @csrf
-                          @method('DELETE')
-                          <input type="submit" class="btn btn-small btn-info btn-sm" value="Elimina">
-                      </form>
-                  </td>
-              </tr>
-          @endforeach
+            @foreach ($posts as $post)
+                <tr>
+                      <td>{{ $post->id }}</td>
+                      <td>{{ $post->title }}</td>
+                      <td>{{ $post->slug }}</td>
+                      <td>{{ $post->category->name ?? '-' }}</td>
+                        <td>
+                            @foreach ($post->tags as $tag)
+                                {{ $tag->name }}{{ $loop->last ? '': ', ' }}
+                            @endforeach
+                        </td>
+                        <td>
+                          <a class="btn btn-secondary btn-sm"
+                          href="{{ route('admin.posts.show', ['post'=>$post->id]) }}">
+                              Dettagli
+                          </a>
+                          <a class="btn btn-success btn-sm" href="{{ route('admin.posts.edit', ['post' => $post->id]) }}">
+                              Modifica
+                          </a>
+                          <form class="d-inline" action="{{ route('admin.posts.destroy', ['post' => $post->id]) }}" method="post">
+                              @csrf
+                              @method('DELETE')
+                              <input type="submit" class="btn btn-small btn-info btn-sm" value="Elimina">
+                          </form>
+                        </td>
+                </tr>
+            @endforeach
       </tbody>
 
     </table>
