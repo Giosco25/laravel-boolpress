@@ -25,14 +25,16 @@
                     </div>
                     <div class="form-group">
                         <label for="testo">Testo articolo</label>
+                        {{-- old si usa quando non si compila un input così quando riavviamo la pagina resta sempre quello che si era scritto precedentemente  --}}
                         <textarea type="text" name="content" class="form-control" id="testo" placeholder="Scrivi qualcosa">{{ old('content', $post->content) }}</textarea>
                     </div>
                     <div class="form-group">
                         <label for="categoria">Categoria:</label>
                         <select id="categoria" class="form-control" name="category_id">
                             <option value="">Seleziona categoria</option>
+
                             @foreach ($categories as $category)
-                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                <option {{ $post->category == $category ? 'selected' : "" }}  value="{{ $category->id }}">{{ $category->name }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -41,7 +43,7 @@
                             <div class="form-check form-check-inline">
                                 <label class="form-check-label">
                                     <input
-                                        {{ in_array($tag->id, old('tags', [])) ? 'checked' : '' }}
+                                        {{ $post->tags->contains($tag) ? 'checked' : '' }}
                                         class="form-check-input"
                                         name="tags[]"
                                         type="checkbox"

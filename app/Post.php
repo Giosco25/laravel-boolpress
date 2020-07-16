@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Post extends Model
 {
-    // è un array che contiene tutti quei campi della tabella che possono essere riempiti usando l'assegnazione di massa.
+    // è un array che contiene tutti quei campi della tabella che possono essere riempiti usando l'assegnazione di massa, è una protezione dei dati.
     //Assegnazione di massa: - significa inviare un array al modello per creare direttamente un nuovo record nel DB.
     protected $fillable = ['title', 'content', 'slug', 'category_id'];
 

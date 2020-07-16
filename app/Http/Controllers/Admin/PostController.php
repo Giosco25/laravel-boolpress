@@ -20,7 +20,7 @@ class PostController extends Controller
     {
         $posts = Post::all();
         $tags  = Tag::all();
-        // si usa data per mettere più cose e poi inserirlo nell return
+        // si usa data per mettere più cose e poi inserirlo dentro view
         // N.B si può mettere tags direttamente su compact('posts','tags')
         $data = [
             'posts'=>$posts,
@@ -62,7 +62,7 @@ class PostController extends Controller
         $dati['slug'] = $slug;
         // creiamo un nuovo Post
         $nuovo_post = new Post();
-        // fill tiene in memoria i dati e va sempre con save
+        // fill compila i dati e va sempre con save
         $nuovo_post->fill($dati);
         $nuovo_post->save();
         // se i dati che abbiamo dei tags non è vuoto esegue altrimenti torna alla pagina iniziale
