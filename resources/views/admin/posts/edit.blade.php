@@ -32,7 +32,6 @@
                         <label for="categoria">Categoria:</label>
                         <select id="categoria" class="form-control" name="category_id">
                             <option value="">Seleziona categoria</option>
-
                             @foreach ($categories as $category)
                                 <option {{ $post->category == $category ? 'selected' : "" }}  value="{{ $category->id }}">{{ $category->name }}</option>
                             @endforeach
@@ -43,6 +42,7 @@
                             <div class="form-check form-check-inline">
                                 <label class="form-check-label">
                                     <input
+                                    {{-- si usa contains per far sì che durante la modifica resta in ascolto della precedente selezione del tag --}}
                                         {{ $post->tags->contains($tag) ? 'checked' : '' }}
                                         class="form-check-input"
                                         name="tags[]"

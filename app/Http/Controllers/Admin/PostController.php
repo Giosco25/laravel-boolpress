@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Post;
 use App\Category;
 use App\Tag;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class PostController extends Controller
@@ -50,16 +51,20 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
+        dd($request->all());
         // richiesta di validità
         $request->validate([
-            "title" => 'required|max:200|unique:posts,title',
-            "content" => 'required'
+            'title' => 'required|max:200|unique:posts,title',
+            'content' => 'required'
+            // 'image' =>  'image|max:1024'
         ]);
         // richiediamo tutti i dati
         $dati = $request->all();
 
         $slug = Str::of($dati['title'])->slug('-')->__tostring();
         $dati['slug'] = $slug;
+        // $img_path = Storage::put('uploads', $dati['image']);
+        // $dati['cover_image'] = $img_path;
         // creiamo un nuovo Post
         $nuovo_post = new Post();
         // fill compila i dati e va sempre con save
@@ -70,7 +75,9 @@ class PostController extends Controller
             // sync permette di passare un array e fa sia attach che detach contemporaneamente cioè attacch salvare dei record, detach eliminare i record
             $nuovo_post->tags()->sync($dati['tags']);
         }
+
         return redirect()->route('admin.posts.index');
+
     }
 
     /**
