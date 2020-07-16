@@ -7,8 +7,8 @@ use Illuminate\Http\Request;
 use App\Post;
 use App\Category;
 use App\Tag;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
@@ -51,11 +51,11 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request->all());
+
         // richiesta di validità
         $request->validate([
             'title' => 'required|max:200|unique:posts,title',
-            'content' => 'required'
+            'content' => 'required',
             // 'image' =>  'image|max:1024'
         ]);
         // richiediamo tutti i dati
@@ -63,7 +63,9 @@ class PostController extends Controller
 
         $slug = Str::of($dati['title'])->slug('-')->__tostring();
         $dati['slug'] = $slug;
-        // $img_path = Storage::put('uploads', $dati['image']);
+
+        $img_path = Storage::put('uploads', $dati['image']);
+        dd($img_path);
         // $dati['cover_image'] = $img_path;
         // creiamo un nuovo Post
         $nuovo_post = new Post();
