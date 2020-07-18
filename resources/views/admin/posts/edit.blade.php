@@ -16,7 +16,7 @@
                         </ul>
                     </div>
                 @endif
-                <form action="{{ route('admin.posts.update', ['post' => $post->id]) }}" method="post">
+                <form action="{{ route('admin.posts.update', ['post' => $post->id]) }}" method="post" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
                     <div class="form-group">
@@ -27,6 +27,12 @@
                         <label for="testo">Testo articolo</label>
                         {{-- old si usa quando non si compila un input così quando riavviamo la pagina resta sempre quello che si era scritto precedentemente  --}}
                         <textarea type="text" name="content" class="form-control" id="testo" placeholder="Scrivi qualcosa">{{ old('content', $post->content) }}</textarea>
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <label for="immagine">Copertina</label>
+                        <input type="file" name="image" class="form-control-file">
+                        <p>Copertina attuale</p>
+                        <img src="{{ asset('storage/' . $post->cover_image) }}" class="img-thumbnail" alt="">
                     </div>
                     <div class="form-group">
                         <label for="categoria">Categoria:</label>

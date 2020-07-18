@@ -8,6 +8,7 @@ class Post extends Model
 {
     // è un array che contiene tutti quei campi della tabella che possono essere riempiti usando l'assegnazione di massa, è una protezione dei dati.
     //Assegnazione di massa: - significa inviare un array al modello per creare direttamente un nuovo record nel DB.
+    // vanno inserite tutte le colonne che dobbiamo passare con il form
     protected $fillable = ['title', 'content', 'slug', 'category_id', 'cover_image'];
 
     public function category(){

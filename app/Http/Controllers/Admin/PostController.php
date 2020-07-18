@@ -56,17 +56,18 @@ class PostController extends Controller
         $request->validate([
             'title' => 'required|max:200|unique:posts,title',
             'content' => 'required',
-            // 'image' =>  'image|max:1024'
+            'image' =>  'image|max:1024'
         ]);
         // richiediamo tutti i dati
         $dati = $request->all();
-
+        // dd($dati);
         $slug = Str::of($dati['title'])->slug('-')->__tostring();
         $dati['slug'] = $slug;
+        if(!empty($dati['image'])){
+            $img_path = Storage::put('uploads', $dati['image']);
+            $dati['cover_image'] = $img_path;
+        }
 
-        $img_path = Storage::put('uploads', $dati['image']);
-        dd($img_path);
-        // $dati['cover_image'] = $img_path;
         // creiamo un nuovo Post
         $nuovo_post = new Post();
         // fill compila i dati e va sempre con save
@@ -123,12 +124,18 @@ class PostController extends Controller
         {
             $request->validate([
                 'title' => 'required|max:255|unique:posts,title,'.$id,
-                'content' => 'required'
+                'content' => 'required',
+                'image'=> 'image|max:1024'
             ]);
 
             $dati = $request->all();
             $slug = Str::of($dati['title'])->slug('-');
             $dati['slug'] = $slug;
+            if(!empty($dati['image'])){
+                $img_path = Storage::put('uploads', $dati['image']);
+                $dati['cover_image'] = $img_path;
+            }
+
             // Agisce sulla chiave primaria e prende un post con tutte le sue caratteristiche
             $post = Post::find($id);
             $post->update($dati);
